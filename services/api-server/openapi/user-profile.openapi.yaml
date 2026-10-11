@@ -1,0 +1,365 @@
+openapi: 3.1.0
+info:
+  title: Cognitive Rehabilitation User Profile API
+  version: 0.1.0
+  description: >
+    User profile APIs for auxiliary training setup, state-safety prompts,
+    training record context, and trend analysis. Risk screening fields are used
+    only to guide training safety prompts and content adjustment; they are not
+    diagnostic fields.
+servers:
+  - url: http://localhost:4000
+security:
+  - bearerAuth: []
+paths:
+  /profiles:
+    post:
+      operationId: createUserProfile
+      summary: Create a training user profile
+      description: Creates a privacy-sensitive profile for auxiliary training setup.
+      tags:
+        - User Profiles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserProfileRequest"
+      responses:
+        "201":
+          description: Profile created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "403":
+          $ref: "#/components/responses/PermissionError"
+  /profiles/{profileId}:
+    get:
+      operationId: readUserProfile
+      summary: Read a training user profile
+      description: Reads a profile only when the caller owns it or has an authorized relationship.
+      tags:
+        - User Profiles
+      parameters:
+        - $ref: "#/components/parameters/ProfileId"
+      responses:
+        "200":
+          description: Profile returned.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "403":
+          $ref: "#/components/responses/PermissionError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+    patch:
+      operationId: updateUserProfile
+      summary: Update a training user profile
+      description: Updates profile fields after RBAC and data-scope checks.
+      tags:
+        - User Profiles
+      parameters:
+        - $ref: "#/components/parameters/ProfileId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserProfileRequest"
+      responses:
+        "200":
+          description: Profile updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "400":
+          $ref: "#/components/responses/ValidationError"
+        "403":
+          $ref: "#/components/responses/PermissionError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+  /profiles/{profileId}/archive:
+    post:
+      operationId: archiveUserProfile
+      summary: Archive a training user profile
+      description: Archives a profile after RBAC and data-scope checks.
+      tags:
+        - User Profiles
+      parameters:
+        - $ref: "#/components/parameters/ProfileId"
+      responses:
+        "200":
+          description: Profile archived.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserProfile"
+        "403":
+          $ref: "#/components/responses/PermissionError"
+        "404":
+          $ref: "#/components/responses/NotFoundError"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: HMAC-JWT
+  parameters:
+    ProfileId:
+      name: profileId
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Training user profile id.
+  responses:
+    ValidationError:
+      description: Request validation failed.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    PermissionError:
+      description: Caller does not have role or data-scope permission.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFoundError:
+      description: Profile not found.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+  schemas:
+    CreateUserProfileRequest:
+      type: object
+      required:
+        - traineeUserId
+        - basicInfo
+        - trainingInfo
+        - riskScreening
+        - deviceInfo
+      properties:
+        traineeUserId:
+          type: string
+        organizationId:
+          type: string
+        basicInfo:
+          $ref: "#/components/schemas/BasicProfileInfo"
+        trainingInfo:
+          $ref: "#/components/schemas/TrainingProfileInfo"
+        riskScreening:
+          $ref: "#/components/schemas/RiskScreeningInfo"
+        deviceInfo:
+          $ref: "#/components/schemas/DeviceProfileInfo"
+        therapistNotes:
+          type: string
+          description: Sensitive professional note. Only therapist and administrator roles can write it.
+    UpdateUserProfileRequest:
+      type: object
+      properties:
+        basicInfo:
+          $ref: "#/components/schemas/BasicProfileInfoUpdate"
+        trainingInfo:
+          $ref: "#/components/schemas/TrainingProfileInfoUpdate"
+        riskScreening:
+          $ref: "#/components/schemas/RiskScreeningInfoUpdate"
+        deviceInfo:
+          $ref: "#/components/schemas/DeviceProfileInfoUpdate"
+        therapistNotes:
+          type: string
+    UserProfile:
+      allOf:
+        - $ref: "#/components/schemas/CreateUserProfileRequest"
+        - type: object
+          required:
+            - id
+            - status
+            - createdByUserId
+            - createdAt
+            - updatedAt
+          properties:
+            id:
+              type: string
+            status:
+              type: string
+              enum:
+                - active
+                - archived
+            createdByUserId:
+              type: string
+            archivedByUserId:
+              type: string
+            archivedAt:
+              type: string
+              format: date-time
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
+    BasicProfileInfo:
+      type: object
+      required:
+        - nickname
+        - ageBand
+        - trainingGoals
+      properties:
+        nickname:
+          type: string
+        ageBand:
+          type: string
+          enum:
+            - "8_10"
+            - "11_13"
+            - "14_16"
+            - other
+        gender:
+          type: string
+          enum:
+            - female
+            - male
+            - non_binary
+            - prefer_not_to_say
+            - unspecified
+        trainingGoals:
+          type: array
+          items:
+            type: string
+    BasicProfileInfoUpdate:
+      type: object
+      properties:
+        nickname:
+          type: string
+        ageBand:
+          type: string
+        gender:
+          type: string
+        trainingGoals:
+          type: array
+          items:
+            type: string
+    TrainingProfileInfo:
+      type: object
+      required:
+        - attentionDifficultyManifestations
+        - impulseControlManifestations
+        - taskPersistenceLevel
+      properties:
+        attentionDifficultyManifestations:
+          type: array
+          items:
+            type: string
+        impulseControlManifestations:
+          type: array
+          items:
+            type: string
+        taskPersistenceLevel:
+          type: string
+          enum:
+            - usually_completes
+            - needs_prompting
+            - often_stops
+            - variable
+        taskPersistenceNotes:
+          type: string
+    TrainingProfileInfoUpdate:
+      type: object
+      properties:
+        attentionDifficultyManifestations:
+          type: array
+          items:
+            type: string
+        impulseControlManifestations:
+          type: array
+          items:
+            type: string
+        taskPersistenceLevel:
+          type: string
+        taskPersistenceNotes:
+          type: string
+    RiskScreeningInfo:
+      type: object
+      description: Training-safety prompt fields only, not diagnostic fields.
+      required:
+        - photosensitivityRisk
+        - seizureHistoryNotice
+        - severeHeadache
+        - significantDizziness
+        - guardianConsentStatus
+      properties:
+        photosensitivityRisk:
+          type: boolean
+        seizureHistoryNotice:
+          type: boolean
+        severeHeadache:
+          type: boolean
+        significantDizziness:
+          type: boolean
+        guardianConsentStatus:
+          type: string
+          enum:
+            - granted
+            - pending
+            - revoked
+    RiskScreeningInfoUpdate:
+      type: object
+      properties:
+        photosensitivityRisk:
+          type: boolean
+        seizureHistoryNotice:
+          type: boolean
+        severeHeadache:
+          type: boolean
+        significantDizziness:
+          type: boolean
+        guardianConsentStatus:
+          type: string
+    DeviceProfileInfo:
+      type: object
+      required:
+        - eegDeviceBound
+        - eegConnectionType
+      properties:
+        eegDeviceBound:
+          type: boolean
+        eegDeviceModel:
+          type: string
+        eegConnectionType:
+          type: string
+          enum:
+            - none
+            - bluetooth
+            - usb
+            - simulator
+    DeviceProfileInfoUpdate:
+      type: object
+      properties:
+        eegDeviceBound:
+          type: boolean
+        eegDeviceModel:
+          type: string
+        eegConnectionType:
+          type: string
+    ErrorResponse:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: object
+          required:
+            - code
+            - message
+          properties:
+            code:
+              type: string
+            message:
+              type: string

@@ -1,0 +1,270 @@
+:root {
+  color-scheme: light;
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    "Microsoft YaHei",
+    sans-serif;
+  color: #0d2533;
+  background: #f7fbff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+button {
+  font: inherit;
+}
+
+.admin-shell {
+  min-height: 100%;
+}
+
+.admin-dashboard {
+  display: grid;
+  gap: 18px;
+  padding: clamp(18px, 3vw, 28px);
+}
+
+.admin-hero,
+.admin-panel,
+.admin-metric-card {
+  border: 1px solid rgba(126, 177, 201, 0.32);
+  background: rgba(255, 255, 255, 0.68);
+  box-shadow:
+    0 24px 72px rgba(20, 85, 121, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.64);
+  backdrop-filter: blur(18px) saturate(1.12);
+}
+
+.admin-hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 18px;
+  align-items: flex-end;
+  border-radius: 24px;
+  padding: clamp(22px, 4vw, 34px);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.82), rgba(235, 249, 253, 0.64)),
+    radial-gradient(circle at 80% 12%, rgba(34, 168, 161, 0.18), transparent 36%);
+}
+
+.admin-hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 2px;
+}
+
+.admin-hero__actions {
+  display: grid;
+  gap: 14px;
+  justify-items: end;
+  min-width: min(360px, 100%);
+}
+
+.admin-hero__actions .ncr-system-health-indicator {
+  min-width: min(320px, 100%);
+}
+
+.admin-hero p,
+.admin-panel__heading p,
+.admin-metric-card span {
+  margin: 0;
+  color: #5f7280;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.admin-hero h1 {
+  margin: 8px 0 12px;
+  color: #0d2533;
+  font-size: clamp(32px, 5vw, 54px);
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.admin-hero span,
+.admin-panel li,
+.admin-task-list p,
+.admin-metric-card p {
+  color: #5f7280;
+  line-height: 1.65;
+}
+
+.admin-primary-action {
+  position: relative;
+  min-height: 44px;
+  border: 0;
+  border-radius: 10px;
+  padding: 0 18px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #145f85, #1a9bb5);
+  box-shadow: 0 18px 34px rgba(20, 95, 133, 0.24);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.admin-primary-action::after {
+  content: "";
+  position: absolute;
+  inset: -50% auto -50% -55%;
+  width: 46%;
+  transform: skewX(-18deg);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.34), transparent);
+  animation: admin-button-sheen 6s cubic-bezier(0.2, 0, 0, 1) infinite;
+}
+
+.admin-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.admin-metric-grid .ncr-soft-motion,
+.admin-metric-grid .ncr-medical-metric-card {
+  height: 100%;
+}
+
+.admin-metric-card {
+  border-radius: 18px;
+  padding: 18px;
+}
+
+.admin-metric-card strong {
+  display: block;
+  margin-top: 12px;
+  color: #0d2533;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.admin-metric-card p {
+  margin: 12px 0 0;
+  font-size: 13px;
+}
+
+.admin-content-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.95fr) minmax(320px, 0.82fr) minmax(280px, 0.72fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.admin-panel {
+  border-radius: 22px;
+  padding: 22px;
+}
+
+.admin-chart-panel,
+.admin-chart-panel > .ncr-glass-card,
+.admin-content-grid > .ncr-glass-card {
+  min-width: 0;
+  height: 100%;
+}
+
+.admin-panel__heading h2 {
+  margin: 6px 0 0;
+  color: #0d2533;
+  font-size: 24px;
+}
+
+.admin-check-list {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-check-list li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  border: 1px solid rgba(126, 177, 201, 0.24);
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.42);
+}
+
+.admin-task-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.admin-task-list article {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  border: 1px solid rgba(126, 177, 201, 0.24);
+  border-radius: 14px;
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.44);
+}
+
+.admin-task-list p {
+  margin: 0;
+}
+
+@keyframes admin-button-sheen {
+  0%,
+  62% {
+    transform: translateX(0) skewX(-18deg);
+  }
+  100% {
+    transform: translateX(360%) skewX(-18deg);
+  }
+}
+
+@media (max-width: 980px) {
+  .admin-hero,
+  .admin-content-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-hero {
+    display: grid;
+    align-items: start;
+  }
+
+  .admin-hero__actions {
+    justify-items: stretch;
+  }
+
+  .admin-metric-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .admin-dashboard {
+    padding: 14px;
+  }
+
+  .admin-metric-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .admin-primary-action,
+  .admin-primary-action::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

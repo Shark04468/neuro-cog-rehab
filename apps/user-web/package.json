@@ -1,0 +1,25 @@
+{
+  "name": "@neuro-cog-rehab/user-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "corepack pnpm --filter @neuro-cog-rehab/eeg-features build && corepack pnpm --filter @neuro-cog-rehab/ui-components build && tsc -p tsconfig.json && vite build",
+    "typecheck": "corepack pnpm --filter @neuro-cog-rehab/eeg-features build && corepack pnpm --filter @neuro-cog-rehab/ui-components build && tsc -p tsconfig.json --noEmit",
+    "test": "corepack pnpm --filter @neuro-cog-rehab/eeg-features build && vitest run"
+  },
+  "dependencies": {
+    "@neuro-cog-rehab/eeg-features": "workspace:*",
+    "@neuro-cog-rehab/ui-components": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "^5.7.2",
+    "vite": "^5.4.11"
+  }
+}

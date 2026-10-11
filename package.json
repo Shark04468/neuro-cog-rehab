@@ -1,0 +1,26 @@
+{
+  "name": "neuro-cog-rehab",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Monorepo for the cognitive rehabilitation auxiliary training and progress tracking platform.",
+  "packageManager": "pnpm@9.12.3",
+  "scripts": {
+    "build": "corepack pnpm -r build",
+    "typecheck": "corepack pnpm --filter @neuro-cog-rehab/shared-types build && corepack pnpm -r --workspace-concurrency=1 typecheck",
+    "test": "corepack pnpm --filter @neuro-cog-rehab/shared-types build && vitest run tests/database-schema.test.ts && corepack pnpm -r test",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.18.0",
+    "@playwright/test": "1.49.1",
+    "eslint": "^9.18.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.20.0",
+    "vitest": "^2.1.8"
+  }
+}
